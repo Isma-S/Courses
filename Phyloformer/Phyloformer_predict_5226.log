@@ -1,0 +1,7 @@
+Phyloformer predict:
+
+Predicting trees for alignments in /home/cjo63/seqgen/FASTA_files_L1.0_M0.25/test
+Using the seqgen model on cpu
+Saving predicted trees in /home/cjo63/Phyloformer/Reconstructed_trees_L1.0_M0.25
+
+  0%|          | 0/1 [00:00<?, ?it/s]Processing tree_39_sequences:   0%|          | 0/1 [00:00<?, ?it/s]
