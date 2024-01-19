@@ -1,7 +1,0 @@
-[console_scripts]
-evaluate = phyloformer.scripts.evaluate:main
-make_tensors = phyloformer.scripts.make_tensors:main
-predict = phyloformer.scripts.predict:main
-simulate_alignments = phyloformer.scripts.simulateAlignments:main
-simulate_trees = phyloformer.scripts.simulateTrees:main
-train_phyloformer = phyloformer.scripts.train:main
