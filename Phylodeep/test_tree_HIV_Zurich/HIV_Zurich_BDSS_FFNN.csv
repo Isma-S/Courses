@@ -1,0 +1,16 @@
+R_naught,"predicted_value     1.687666
+ci_2_5_boundary     1.402188
+ci_97_5_boundary    2.076712
+Name: R_naught, dtype: float64"
+Infectious_period,"predicted_value      9.783524
+ci_2_5_boundary      8.120946
+ci_97_5_boundary    12.260723
+Name: Infectious_period, dtype: float64"
+X_transmission,"predicted_value      9.336288
+ci_2_5_boundary      6.651802
+ci_97_5_boundary    10.000000
+Name: X_transmission, dtype: float64"
+Superspreading_individuals_fraction,"predicted_value     0.078699
+ci_2_5_boundary     0.050490
+ci_97_5_boundary    0.132575
+Name: Superspreading_individuals_fraction, dtype: float64"

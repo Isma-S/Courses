@@ -1,0 +1,158 @@
+import os
+
+# To run locally:
+# snakemake --keep-going --cores 4 --use-singularity --singularity-prefix ~/.singularity --singularity-args "--home ~"
+
+
+localrules: all
+
+sim_folder = os.path.abspath('.')
+models = ['BD', 'BDSS', 'BDEI']
+REPETITIONS=100
+
+rule all:
+    input:
+        errors = expand(os.path.join(sim_folder, 'predicted_values', '{model}_errors.svg'), model=models),
+        times = expand(os.path.join(sim_folder, 'predicted_values', '{model}_huge', '{name}_time.csv.gz'), model=models, name=['CNN_CBLV', 'FFNN_SS'])
+
+
+rule split:
+    '''
+    Splits a forest into trees.
+    '''
+    input:
+        nwk = os.path.join(sim_folder, 'test_trees', '{model}_huge_100.nwk.gz'),
+        log = os.path.join(sim_folder, 'predicted_values', '{model}_huge', 'TARGET.csv.gz'),
+    output:
+        nwk = temp(expand(os.path.join(sim_folder, 'test_trees', '{{model}}_huge_100.{i}.nwk'), i=range(REPETITIONS))),
+        log = temp(expand(os.path.join(sim_folder, 'predicted_values', '{{model}}_huge', 'TARGET.{i}.csv'), i=range(REPETITIONS)))
+    params:
+        mem = 2000,
+        name = 'split',
+        qos = 'fast'
+    threads: 1
+    singularity: "docker://evolbioinfo/python-evol:v3.6richer.1"
+    shell:
+        """
+        python3 split.py --in_log {input.log} --in_nwk {input.nwk} --out_nwk {output.nwk} --out_log {output.log}
+        """
+
+rule combine_logs:
+    '''
+    Combines logs.
+    '''
+    input:
+        log = expand(os.path.join(sim_folder, 'predicted_values', '{{model}}_huge', '{{name}}.{i}.csv'), i=range(REPETITIONS))
+    output:
+        log = os.path.join(sim_folder, 'predicted_values', '{model}_huge', '{name}.csv.gz'),
+    params:
+        log = os.path.join(sim_folder, 'predicted_values', '{model}_huge', '{name}.csv'),
+        log_pattern = os.path.join(sim_folder, 'predicted_values', '{model}_huge', '{name}.$i.csv'),
+        mem = 2000,
+        name = 'combine_{model}',
+        qos = 'fast'
+    threads: 1
+    shell:
+        """
+        rm -rf {output.log} {params.log}
+        for i in {{0..99}}
+        do
+            if [ $i -eq 0 ]
+            then
+                cat {params.log_pattern} > {params.log}
+            else
+                tail -n 1 {params.log_pattern} >> {params.log}
+            fi
+        done
+        gzip {params.log}
+        """
+
+rule estimate_cnn:
+    input:
+        nwk = os.path.join(sim_folder, 'test_trees', '{model}_huge_100.{i}.nwk'),
+        log = os.path.join(sim_folder, 'predicted_values', '{model}_huge', 'TARGET.{i}.csv'),
+    output:
+        est_CNN = temp(os.path.join(sim_folder, 'predicted_values', '{model}_huge', 'CNN_CBLV.{i}.csv')),
+        tlog = temp(os.path.join(sim_folder, 'predicted_values', '{model}_huge', 'CNN_CBLV_time.{i}.csv')),
+    params:
+        mem = 2000,
+        name = 'subtrees_{model}.{i}',
+        qos = 'fast'
+    threads: 1
+    singularity: "docker://evolbioinfo/phylodeep:v0.2.60"
+    shell:
+        """
+        pcol=`head -n 1 {input.log} | tr ',' '\\n' | cat -n | grep "sampling" | cut -f 1`
+        p=`tail -n 1 {input.log} | cut -d, -f$pcol `
+        SECONDS=0
+        paramdeep -t {input.nwk} -p $p -m {wildcards.model} -v CNN_FULL_TREE -o {output.est_CNN}
+        echo $SECONDS > {output.tlog}
+        """
+
+rule estimate_ffnn:
+    input:
+        nwk = os.path.join(sim_folder, 'test_trees', '{model}_huge_100.{i}.nwk'),
+        log = os.path.join(sim_folder, 'predicted_values', '{model}_huge', 'TARGET.{i}.csv'),
+    output:
+        est_FFNN = temp(os.path.join(sim_folder, 'predicted_values', '{model}_huge', 'FFNN_SS.{i}.csv')),
+        tlog = temp(os.path.join(sim_folder, 'predicted_values', '{model}_huge', 'FFNN_SS_time.{i}.csv')),
+    params:
+        mem = 2000,
+        name = 'subtrees_{model}.{i}',
+        qos = 'fast'
+    singularity: "docker://evolbioinfo/phylodeep:v0.2.60"
+    threads: 1
+    shell:
+        """
+        pcol=`head -n 1 {input.log} | tr ',' '\\n' | cat -n | grep "sampling" | cut -f 1`
+        p=`tail -n 1 {input.log} | cut -d, -f$pcol `
+        SECONDS=0
+        paramdeep -t {input.nwk} -p $p -m {wildcards.model} -v FFNN_SUMSTATS -o {output.est_FFNN}
+        echo $SECONDS > {output.tlog}
+        """
+
+rule combine_estimates:
+    '''
+    Combine estimates.
+    '''
+    input:
+        est_CNN = os.path.join(sim_folder, 'predicted_values', '{model}_huge', 'CNN_CBLV.csv.gz'),
+        est_FFNN = os.path.join(sim_folder, 'predicted_values', '{model}_huge', 'FFNN_SS.csv.gz'),
+        est_FFNN_on_large = os.path.join(sim_folder, 'predicted_values', '{model}_huge', 'FFNN_SS_on_large.csv.gz'),
+        real = os.path.join(sim_folder, '..', 'Fig_3', 'predicted_values', '{model}_large', 'TARGET.csv.gz'),
+        est_CNN_large = os.path.join(sim_folder, '..', 'Fig_3', 'predicted_values', '{model}_large', 'CNN_CBLV.csv.gz'),
+    output:
+        tab = os.path.join(sim_folder, 'predicted_values', '{model}_estimates.tab'),
+    params:
+        mem = 2000,
+        name = 'estimates',
+        qos = 'fast',
+    threads: 1
+    singularity: "docker://evolbioinfo/python-evol:v3.6richer.1"
+    shell:
+        """
+        python3 summary_table.py --real {input.real} \
+        --estimated_CNN {input.est_CNN} --estimated_FFNN {input.est_FFNN}  \
+        --estimated_FFNN_on_large {input.est_FFNN_on_large}  \
+        --estimated_CNN_large {input.est_CNN_large} \
+        --tab {output.tab} --model {wildcards.model}
+        """
+
+rule plot_errors:
+    '''
+    Plots the errors.
+    '''
+    input:
+        tab = os.path.join(sim_folder, 'predicted_values', '{model}_estimates.tab'),
+    output:
+        png = os.path.join(sim_folder, 'predicted_values', '{model}_errors.svg'),
+    params:
+        mem = 2000,
+        name = 'errors',
+        qos = 'fast'
+    threads: 1
+    singularity: "docker://evolbioinfo/python-evol:v3.6richer.1"
+    shell:
+        """
+        python3 plot_error.py --estimates {input.tab} --png {output.png}
+        """

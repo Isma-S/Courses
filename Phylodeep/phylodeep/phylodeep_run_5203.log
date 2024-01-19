@@ -1,0 +1,30 @@
+Traceback (most recent call last):
+  File "/home/cjo63/miniconda3/envs/phyloenv/bin/checkdeep", line 8, in <module>
+    sys.exit(main())
+  File "/home/cjo63/miniconda3/envs/phyloenv/lib/python3.8/site-packages/phylodeep/checkdeep.py", line 163, in main
+    checkdeep(**vars(params))
+  File "/home/cjo63/miniconda3/envs/phyloenv/lib/python3.8/site-packages/phylodeep/checkdeep.py", line 102, in checkdeep
+    for subtree in extract_clusters(tree, min_size=MIN_TREE_SIZE_LARGE, max_size=MIN_TREE_SIZE_HUGE - 1):
+  File "/home/cjo63/miniconda3/envs/phyloenv/lib/python3.8/site-packages/phylodeep/tree_utilities.py", line 133, in extract_clusters
+    else _merge(*(getattr(_, sorted_tips_feature) for _ in n.children),
+TypeError: _merge() got multiple values for argument 'key'
+Traceback (most recent call last):
+  File "/home/cjo63/miniconda3/envs/phyloenv/bin/paramdeep", line 8, in <module>
+    sys.exit(main())
+  File "/home/cjo63/miniconda3/envs/phyloenv/lib/python3.8/site-packages/phylodeep/paramdeep.py", line 168, in main
+    inference = paramdeep(**vars(params))
+  File "/home/cjo63/miniconda3/envs/phyloenv/lib/python3.8/site-packages/phylodeep/paramdeep.py", line 65, in paramdeep
+    for subtree in extract_clusters(tree, min_size=MIN_TREE_SIZE_SMALL if model != BDSS else MIN_TREE_SIZE_LARGE,
+  File "/home/cjo63/miniconda3/envs/phyloenv/lib/python3.8/site-packages/phylodeep/tree_utilities.py", line 133, in extract_clusters
+    else _merge(*(getattr(_, sorted_tips_feature) for _ in n.children),
+TypeError: _merge() got multiple values for argument 'key'
+Traceback (most recent call last):
+  File "/home/cjo63/miniconda3/envs/phyloenv/bin/paramdeep", line 8, in <module>
+    sys.exit(main())
+  File "/home/cjo63/miniconda3/envs/phyloenv/lib/python3.8/site-packages/phylodeep/paramdeep.py", line 168, in main
+    inference = paramdeep(**vars(params))
+  File "/home/cjo63/miniconda3/envs/phyloenv/lib/python3.8/site-packages/phylodeep/paramdeep.py", line 65, in paramdeep
+    for subtree in extract_clusters(tree, min_size=MIN_TREE_SIZE_SMALL if model != BDSS else MIN_TREE_SIZE_LARGE,
+  File "/home/cjo63/miniconda3/envs/phyloenv/lib/python3.8/site-packages/phylodeep/tree_utilities.py", line 133, in extract_clusters
+    else _merge(*(getattr(_, sorted_tips_feature) for _ in n.children),
+TypeError: _merge() got multiple values for argument 'key'

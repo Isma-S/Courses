@@ -1,0 +1,27 @@
+IQ-TREE multicore version 2.2.2.6 COVID-edition for Linux 64-bit built May 27 2023
+Developed by Bui Quang Minh, James Barbetti, Nguyen Lam Tung,
+Olga Chernomor, Heiko Schmidt, Dominik Schrempf, Michael Woodhams, Ly Trong Nhan.
+
+Host:    mathdora (AVX512, FMA3, 503 GB RAM)
+Command: iqtree2 --alisim /home/cjo63/simulated_sequences/simulated_data -m Dayhoff -t /home/cjo63/BD_large_100.nwk --seqtype AA
+Seed:    432805 (Using SPRNG - Scalable Parallel Random Number Generator)
+Time:    Fri Dec 22 15:44:56 2023
+Kernel:  AVX+FMA - 1 threads (96 CPU cores detected)
+
+[Alignment Simulator] Executing
+ - Tree filepath: /home/cjo63/BD_large_100.nwk
+ - Length of output sequences: 1000
+ - Model: Dayhoff
+ - Number of output datasets: 1
+SUBSTITUTION PROCESS
+--------------------
+
+Model of substitution: Dayhoff
+
+State frequencies: (model)
+
+Model of rate heterogeneity: Uniform
+
+[Alignment Simulator] Done
+Simulation time: 0.040s
+Date and Time: Fri Dec 22 15:44:56 2023
