@@ -1,0 +1,56 @@
+Number of valid trees: 56 
+Pruned trees (first few):
+[[1]]
+
+Phylogenetic tree with 305 tips and 304 internal nodes.
+
+Tip labels:
+  t941, t60, t935, t1114, t695, t171, ...
+
+Rooted; includes branch lengths.
+
+[[2]]
+
+Phylogenetic tree with 482 tips and 481 internal nodes.
+
+Tip labels:
+  t1482, t453, t167, t304, t1163, t1871, ...
+
+Rooted; includes branch lengths.
+
+[[3]]
+
+Phylogenetic tree with 13 tips and 12 internal nodes.
+
+Tip labels:
+  t23, t42, t62, t53, t59, t18, ...
+
+Rooted; includes branch lengths.
+
+[[4]]
+
+Phylogenetic tree with 47 tips and 46 internal nodes.
+
+Tip labels:
+  t64, t198, t110, t5, t183, t112, ...
+
+Rooted; includes branch lengths.
+
+[[5]]
+
+Phylogenetic tree with 16 tips and 15 internal nodes.
+
+Tip labels:
+  t39, t30, t24, t55, t26, t18, ...
+
+Rooted; includes branch lengths.
+
+[[6]]
+
+Phylogenetic tree with 76 tips and 75 internal nodes.
+
+Tip labels:
+  t141, t162, t189, t10, t93, t159, ...
+
+Rooted; includes branch lengths.
+
